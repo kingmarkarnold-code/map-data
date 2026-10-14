@@ -14,8 +14,8 @@
 </style></head><body>
 <div id="app"></div>
 <div id="info">
-  <h3>King James Drive Southwest — STREET VIEW (view only)</h3>
-  <p>This is the buried street, view only — walking comes back in the next step once you confirm you can see this. The dark ribbon is <b>King James Drive Southwest</b> at its true width and height; it dives under the hill and runs <b>up to 15 m underground</b> (red marker). The cyan line shows its buried path. The character stands next to the street at the near end. Drag to orbit, pinch to zoom.</p>
+  <h3>King James Drive Southwest — STREET VIEW (view only) — new controls</h3>
+  <p>This is the buried street, view only — walking comes back in the next step once you confirm you can see this. The dark ribbon is <b>King James Drive Southwest</b> at its true width and height; it dives under the hill and runs <b>up to 15 m underground</b> (red marker). The cyan line shows its buried path. The character stands next to the street at the near end. Drag to pan, use two fingers to orbit, pinch to zoom.</p>
   
 </div>
 <div id="btns">
@@ -37,6 +37,10 @@ const ren = new THREE.WebGLRenderer({antialias:true});
 ren.setSize(innerWidth, innerHeight); ren.setPixelRatio(devicePixelRatio);
 document.getElementById('app').appendChild(ren.domElement);
 const ctl = new THREE.OrbitControls(cam, ren.domElement);
+// Joshua's controls (2026-10-14): drag pans, two fingers orbit.
+ctl.mouseButtons = { LEFT: THREE.MOUSE.PAN, MIDDLE: THREE.MOUSE.DOLLY, RIGHT: THREE.MOUSE.ROTATE };
+ctl.touches = { ONE: THREE.TOUCH.PAN, TWO: THREE.TOUCH.DOLLY_ROTATE };
+ctl.screenSpacePanning = false;
 ctl.autoRotate = true; ctl.autoRotateSpeed = 0.5; ctl.maxDistance = 700;
 scene.add(new THREE.AmbientLight(0xffffff, 0.85));
 const sun = new THREE.DirectionalLight(0xffffff, 0.7); sun.position.set(120, 180, 60); scene.add(sun);
