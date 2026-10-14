@@ -4,11 +4,14 @@ Locked by Joshua. The fresh map data in this repo is built against this spec.
 Small tweaks pending Joshua's review (noted 2026-10-13); the structure stands.
 
 ## 1. The world & border
-- Border polygon (confirmed 2026-10-07): South Cobb Regional Library (805 Clay Rd SW,
-  Mableton, 33.82524, -84.57752) → downtown Atlanta NE extent (33.7586, -84.38908)
-  → SE corner (33.535, -84.392), pushed ~1/2 mile past the Riverdale apartments so
-  the whole complex sits inside → Fairburn exit, I-85 S (33.53045, -84.60615) →
-  back to the library.
+- Border polygon (confirmed 2026-10-07; NW vertex REVISED 2026-10-14 by Joshua):
+  NW vertex at the Zaxby's pinpoint, 5090 Floyd Rd SW, Mableton — corner point
+  (33.83063, -84.57801), offset west from the Zaxby's so the South Cobb Regional
+  Library (805 Clay Rd SW) sits exactly 100 YARDS inside the western edge
+  (buffer rule) and a good portion of Clay Rd is included → downtown Atlanta NE
+  extent (33.7586, -84.38908) → SE corner (33.535, -84.392), pushed ~1/2 mile
+  past the Riverdale apartments so the whole complex sits inside → Fairburn
+  exit, I-85 S (33.53045, -84.60615) → back to the NW vertex.
 - Read the western border northbound: US 29 / Roosevelt Hwy runs on the RIGHT
   (east) side going north. Through Fairburn it is West Broad St — there is no
   Main St in Fairburn, GA.
