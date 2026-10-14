@@ -149,3 +149,13 @@ Small tweaks pending Joshua's review (noted 2026-10-13); the structure stands.
   re-researching anything on Google.
 - Railroads and bridges/overpasses are first-class map data (railroads.geojson,
   bridges.geojson), per Joshua 2026-10-14.
+
+## Addendum 2 (2026-10-14, Joshua) — game map stage
+- A GAME MAP now lives in `game-map/` in this repo, converted only from the
+  reference maps above: roads, water, 166,816 building footprints, named
+  places, and a ~31.8 u heightfield. Origin (0,0) = 535 Dollar Mill Rd;
+  1 unit = 1 meter. See `game-map/README.md`.
+- For THIS stage the goal is the real world as close to Google Maps as the
+  data allows, turned into a 3D world. Name changes and Joshua's specific
+  requested buildings are DEFERRED — they layer on later.
+- Airports belong on the Places map (Map 2) as their own layer.
