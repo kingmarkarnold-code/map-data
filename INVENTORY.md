@@ -58,3 +58,34 @@ They stay on the list for placement from Joshua's direction.
 The border is a DATA boundary only. The first build rendered a red line
 around the map in-game; Joshua ordered it removed. Resource maps may show
 the outline for reference; the game must never render it.
+
+## Public transit (official GTFS, clipped to the border)
+- MARTA: 54 routes touch the map (all 4 rail lines, streetcar, Rapid A,
+  plus bus), 2,857 stops inside, 23 stations. Southeast corner (Clayton /
+  Riverdale) is MARTA: routes 191 Riverdale, 196 Upper Riverdale,
+  193 Morrow/Jonesboro, 178, 180, 189, 192, 194, 195, 197, 198 and more.
+- CobbLinc (Cobb County's own feed): 4 routes reach inside - 10, 25, 30,
+  R10 Rapid - 67 stops, covering the Mableton/Austell corner.
+- Files: `transit_routes.geojson`, `transit_stops.geojson`,
+  `resource-map-3-transit.html` (Map 3, with legend).
+
+## Terrain (open DEM, AWS terrain tiles / SRTM-class data)
+- Ground inside the border: 457 ft (river bottoms) to 1,149 ft (west
+  ridges); mean ~919 ft. Bands + colors in `terrain_bands.json`;
+  rendered tint+hillshade in `terrain_tint.png`.
+- `resource-terrain-1-google-style.html` - Google-Maps-style terrain WITH KEY.
+- `resource-terrain-2-opentopo.html` - OpenTopoMap rendering WITH KEY
+  (contours in meters). Two renderings of the same ground, for cross-checks.
+
+## Satellite
+- `resource-map-4-satellite.html` - Map 4: full-resolution aerial imagery
+  streamed tile-by-tile (Esri World Imagery, z18/19 = individual houses
+  visible). Imagery is streamed, never baked/downscaled, so detail stays
+  intact exactly as Joshua required. Border + anchor pins + major-roads
+  overlay included (border is reference-only, per the red-line rule).
+
+## Airports
+- Airport features are on Map 2 (Places) as their own layer (50 named
+  features; 2,165 airport elements incl. runways/taxiways in
+  features.geojson): Hartsfield-Jackson ATL and Fulton County
+  Airport-Brown Field, per Joshua 2026-10-14.
