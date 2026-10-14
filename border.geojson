@@ -4,12 +4,12 @@
   "features": [
     {
       "type": "Feature",
-      "properties": { "name": "Game border", "notes": "Vertices in order. REVISED 2026-10-14 (Joshua): NW vertex moved from the library to the Zaxby's on Floyd Rd (5090 Floyd Rd SW) to include a good portion of Clay Rd, then offset west so the South Cobb Regional Library sits exactly 100 yards INSIDE the western edge (buffer rule). The Zaxby's is the named pinpoint for this end; the corner point itself is (33.83063, -84.57801). Read the western border northbound: US 29 / Roosevelt Hwy runs on the RIGHT (east) side going north. SE corner pushed ~1/2 mile past the Riverdale apartments so the whole complex sits inside." },
+      "properties": { "name": "Game border", "notes": "Vertices in order. REVISED 2026-10-14 (Joshua): NW vertex moved from the library to the Zaxby's on Floyd Rd (5090 Floyd Rd SW) to include a good portion of Clay Rd, then offset west so the South Cobb Regional Library sits exactly 100 yards INSIDE the western edge (buffer rule). The Zaxby's is the named pinpoint for this end; the corner point itself is (33.83063, -84.57801). NE vertex REVISED 2026-10-14 (Joshua): moved from downtown Atlanta to the Piedmont Rd NE & Monroe Dr NE junction (33.79703, -84.36902), right at Piedmont Park's southeast corner - pulls in all of Midtown and Piedmont Park. Downtown Atlanta remains a pin inside the map. Read the western border northbound: US 29 / Roosevelt Hwy runs on the RIGHT (east) side going north. SE corner pushed ~1/2 mile past the Riverdale apartments so the whole complex sits inside." },
       "geometry": {
         "type": "Polygon",
         "coordinates": [[
           [-84.57801, 33.83063],
-          [-84.38908, 33.75860],
+          [-84.36902, 33.79703],
           [-84.39200, 33.53500],
           [-84.60615, 33.53045],
           [-84.57801, 33.83063]
@@ -24,7 +24,7 @@
     { "type": "Feature", "properties": { "name": "Mableton", "detail": "West side (placeholder name)" }, "geometry": { "type": "Point", "coordinates": [-84.58010, 33.81877] } },
     { "type": "Feature", "properties": { "name": "Riverdale High School", "detail": "160 Roberts Dr, Riverdale, GA 30274" }, "geometry": { "type": "Point", "coordinates": [-84.40224, 33.55658] } },
     { "type": "Feature", "properties": { "name": "Riverdale apartments", "detail": "Placeholder - south of Riverdale High on Roberts Dr, just past the Hwy 138 light, east side heading south (exact complex TBD)" }, "geometry": { "type": "Point", "coordinates": [-84.39900, 33.54300] } },
-    { "type": "Feature", "properties": { "name": "Downtown Atlanta", "detail": "Northeast extent" }, "geometry": { "type": "Point", "coordinates": [-84.38908, 33.75860] } },
+    { "type": "Feature", "properties": { "name": "Downtown Atlanta", "detail": "Former NE extent (until 2026-10-14); now an interior landmark" }, "geometry": { "type": "Point", "coordinates": [-84.38908, 33.75860] } },
     { "type": "Feature", "properties": { "name": "Fairburn exit, I-85 S", "detail": "Southwest extent" }, "geometry": { "type": "Point", "coordinates": [-84.60615, 33.53045] } }
   ]
 }
