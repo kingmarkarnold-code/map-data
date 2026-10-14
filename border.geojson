@@ -1,24 +1,27 @@
 {
   "type": "FeatureCollection",
-  "name": "Surviving Adamsville - original border (as drawn from Google Maps, confirmed 2026-10-07)",
+  "name": "Surviving Adamsville - border (revised 2026-10-14)",
   "features": [
     {
       "type": "Feature",
-      "properties": { "name": "Game border", "notes": "Vertices in order. Read the western border northbound: US 29 / Roosevelt Hwy runs on the RIGHT (east) side going north. SE corner pushed ~1/2 mile past the Riverdale apartments so the whole complex sits inside." },
+      "properties": { "name": "Game border", "notes": "Vertices in order. REVISED 2026-10-14 (Joshua): NW vertex moved from the library to the Zaxby's on Floyd Rd (5090 Floyd Rd SW) to include a good portion of Clay Rd, then offset west so the South Cobb Regional Library sits exactly 100 yards INSIDE the western edge (buffer rule). The Zaxby's is the named pinpoint for this end; the corner point itself is (33.83063, -84.57801). Read the western border northbound: US 29 / Roosevelt Hwy runs on the RIGHT (east) side going north. SE corner pushed ~1/2 mile past the Riverdale apartments so the whole complex sits inside." },
       "geometry": {
         "type": "Polygon",
         "coordinates": [[
-          [-84.57752, 33.82524],
+          [-84.57801, 33.83063],
           [-84.38908, 33.75860],
           [-84.39200, 33.53500],
           [-84.60615, 33.53045],
-          [-84.57752, 33.82524]
+          [-84.57801, 33.83063]
         ]]
       }
     },
+    { "type": "Feature", "properties": { "name": "Zaxby's - NW pinpoint", "detail": "5090 Floyd Rd SW, Mableton, GA 30126 - Joshua's pinpoint for the northwest end (2026-10-14)" }, "geometry": { "type": "Point", "coordinates": [-84.57650, 33.83063] } },
+    { "type": "Feature", "properties": { "name": "South Cobb Regional Library", "detail": "805 Clay Rd SW, Mableton, GA 30126 - original NW corner; now inside the border with a 100-yard buffer" }, "geometry": { "type": "Point", "coordinates": [-84.57752, 33.82524] } },
+    { "type": "Feature", "properties": { "name": "Mableton Post Office", "detail": "5284 Floyd Rd SW, Mableton, GA 30126" }, "geometry": { "type": "Point", "coordinates": [-84.57652, 33.82636] } },
+    { "type": "Feature", "properties": { "name": "RaceTrac", "detail": "5350 Floyd Rd SW, Mableton, GA 30126 - across from the post office cluster (Joshua's memory, verified 2026-10-14)" }, "geometry": { "type": "Point", "coordinates": [-84.57639, 33.82478] } },
     { "type": "Feature", "properties": { "name": "Home base", "detail": "535 Dollar Mill Rd SW, Atlanta, GA 30331 (Ridgecrest Forest)" }, "geometry": { "type": "Point", "coordinates": [-84.52645, 33.74110] } },
     { "type": "Feature", "properties": { "name": "Mableton", "detail": "West side (placeholder name)" }, "geometry": { "type": "Point", "coordinates": [-84.58010, 33.81877] } },
-    { "type": "Feature", "properties": { "name": "South Cobb Regional Library", "detail": "805 Clay Rd SW, Mableton, GA 30126" }, "geometry": { "type": "Point", "coordinates": [-84.57752, 33.82524] } },
     { "type": "Feature", "properties": { "name": "Riverdale High School", "detail": "160 Roberts Dr, Riverdale, GA 30274" }, "geometry": { "type": "Point", "coordinates": [-84.40224, 33.55658] } },
     { "type": "Feature", "properties": { "name": "Riverdale apartments", "detail": "Placeholder - south of Riverdale High on Roberts Dr, just past the Hwy 138 light, east side heading south (exact complex TBD)" }, "geometry": { "type": "Point", "coordinates": [-84.39900, 33.54300] } },
     { "type": "Feature", "properties": { "name": "Downtown Atlanta", "detail": "Northeast extent" }, "geometry": { "type": "Point", "coordinates": [-84.38908, 33.75860] } },
