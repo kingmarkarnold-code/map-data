@@ -19,8 +19,8 @@
 </style></head><body>
 <div id="app"></div>
 <div id="info">
-  <h3>King James Drive Southwest — STREET VIEW — walkable v4</h3>
-  <p>The dark ribbon is <b>King James Drive Southwest</b> at its true width and height; it dives under the hill and runs <b>up to 15 m underground</b> (red marker). The cyan line shows its buried path. Every street in view is drawn the same way — solid surface, true width, its own heights. The character stands next to the street. <b>Walk him with the joystick (bottom left) or W A S D / arrow keys</b> — he follows the real surface and the ground is solid — where the street dives under, he stays on top and the readout tells you how far below him the street runs. Drag still pans, two fingers orbit.</p>
+  <h3>King James Drive Southwest — STREET VIEW — walkable v5</h3>
+  <p>The dark ribbon is <b>King James Drive Southwest</b> at its true width and height; it dives under the hill and runs <b>up to 15 m underground</b> (red marker). The light-blue road you can see through the hill is King James itself, running underneath (toggle: X-ray street). Every street in view is drawn the same way — solid surface, true width, its own heights. The character stands next to the street. <b>Walk him with the joystick (bottom left) or W A S D / arrow keys</b> — he follows the real surface and the ground is solid — where the street dives under, he stays on top and the readout tells you how far below him the street runs. Drag still pans, two fingers orbit.</p>
   
 </div>
 <div id="btns">
@@ -128,11 +128,28 @@ const RD = S.road;
     scene.add(new THREE.Mesh(g, mat));
   }
 }
-// X-ray line: the street's buried path, visible through the ground.
-const xray = new THREE.Line(
-  new THREE.BufferGeometry().setFromPoints(RD.xs.map((x, i) => L(x, RD.road_y[i] + 0.12, RD.zs[i]))),
-  new THREE.LineBasicMaterial({color: 0x22d3ee, depthTest: false, transparent: true, opacity: 0.9}));
-xray.renderOrder = 998; scene.add(xray);
+// X-ray ROAD: King James itself, drawn as a real street surface at its true
+// width and heights, visible through the ground - a road, not a line
+// (Joshua, 2026-10-14). Toggle with the X-ray street button.
+const xray = (() => {
+  const n = RD.xs.length, hw = RD.w / 2, pos = [], idx = [];
+  for (let i = 0; i < n; i++) {
+    const a = Math.max(0, i - 1), b = Math.min(n - 1, i + 1);
+    let dx = RD.xs[b] - RD.xs[a], dz = RD.zs[b] - RD.zs[a];
+    const len = Math.hypot(dx, dz) || 1; dx /= len; dz /= len;
+    pos.push(RD.xs[i] - CX - dz * hw, RD.road_y[i] + 0.06 - PAD, RD.zs[i] - CZ + dx * hw,
+             RD.xs[i] - CX + dz * hw, RD.road_y[i] + 0.06 - PAD, RD.zs[i] - CZ - dx * hw);
+    if (i > 0) { const k = (i - 1) * 2; idx.push(k, k + 1, k + 2, k + 1, k + 3, k + 2); }
+  }
+  const g = new THREE.BufferGeometry();
+  g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+  g.setIndex(idx); g.computeVertexNormals();
+  const mesh = new THREE.Mesh(g, new THREE.MeshBasicMaterial({color: 0x38bdf8, transparent: true,
+    opacity: 0.5, depthTest: false, side: THREE.DoubleSide}));
+  mesh.renderOrder = 997;
+  return mesh;
+})();
+scene.add(xray);
 // Deepest-point marker: pole from the buried street up to the surface + label.
 {
   const dp = S.deepest, top = groundAt(dp.x, dp.z), roadLvl = top - dp.depth;
