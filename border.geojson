@@ -4,15 +4,15 @@
   "features": [
     {
       "type": "Feature",
-      "properties": { "name": "Game border", "notes": "Vertices in order. REVISED 2026-10-14 (Joshua): NW vertex moved from the library to the Zaxby's on Floyd Rd (5090 Floyd Rd SW) to include a good portion of Clay Rd, then offset west so the South Cobb Regional Library sits exactly 100 yards INSIDE the western edge (buffer rule). The Zaxby's is the named pinpoint for this end; the corner point itself is (33.83063, -84.57801). NE vertex REVISED 2026-10-14 (Joshua): moved from downtown Atlanta to the Piedmont Rd NE & Monroe Dr NE junction (33.79703, -84.36902), right at Piedmont Park's southeast corner - pulls in all of Midtown and Piedmont Park. Downtown Atlanta remains a pin inside the map. SE vertex REVISED 2026-10-14 (Joshua): moved to the exact Taylor Rd & Flint River Rd junction (33.51822, -84.39097), Riverdale. SW vertex REVISED 2026-10-14 (Joshua): moved from the I-85 Fairburn exit to the Wendy's at 7835 Senoia Rd, Fairburn (33.54298, -84.57762) - the anchor for this end. The I-85 interchange now sits outside the border; downtown Fairburn (W Broad St) remains inside. Read the western border northbound: US 29 / Roosevelt Hwy runs on the RIGHT (east) side going north. SE corner pushed ~1/2 mile past the Riverdale apartments so the whole complex sits inside." },
+      "properties": { "name": "Game border", "notes": "Vertices in order. REVISED 2026-10-14 (Joshua): NW vertex moved from the library to the Zaxby's on Floyd Rd (5090 Floyd Rd SW) to include a good portion of Clay Rd, then offset west so the South Cobb Regional Library sits exactly 100 yards INSIDE the western edge (buffer rule). The Zaxby's is the named pinpoint for this end; the corner point itself is (33.83063, -84.57853). Offset recomputed 2026-10-14 after the SW anchor moved to the Wendy's: with the western edge running Wendy's -> NW vertex, the NW corner sits 48 m further west so the library keeps its full 100-yard buffer inside the edge. NE vertex REVISED 2026-10-14 (Joshua): moved from downtown Atlanta to the Piedmont Rd NE & Monroe Dr NE junction (33.79703, -84.36902), right at Piedmont Park's southeast corner - pulls in all of Midtown and Piedmont Park. Downtown Atlanta remains a pin inside the map. SE vertex REVISED 2026-10-14 (Joshua): moved to the exact Taylor Rd & Flint River Rd junction (33.51822, -84.39097), Riverdale. SW vertex REVISED 2026-10-14 (Joshua): moved from the I-85 Fairburn exit to the Wendy's at 7835 Senoia Rd, Fairburn (33.54298, -84.57762) - the anchor for this end. The I-85 interchange now sits outside the border; downtown Fairburn (W Broad St) remains inside. Read the western border northbound: US 29 / Roosevelt Hwy runs on the RIGHT (east) side going north. SE corner pushed ~1/2 mile past the Riverdale apartments so the whole complex sits inside." },
       "geometry": {
         "type": "Polygon",
         "coordinates": [[
-          [-84.57801, 33.83063],
+          [-84.57853, 33.83063],
           [-84.36902, 33.79703],
           [-84.39097, 33.51822],
           [-84.57762, 33.54298],
-          [-84.57801, 33.83063]
+          [-84.57853, 33.83063]
         ]]
       }
     },
