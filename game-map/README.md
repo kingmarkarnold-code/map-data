@@ -12,7 +12,10 @@ completely separate from the old game's data — nothing was copied from it.
 
 ## Files
 - `roads.json` — [name, osm class, width (m, per PARAMETERS §4 conversion),
-  [[x, z], ...]] for all 65,736 drivable segments.
+  [[x, z], ...], ground profile [terrain height at each point], top material,
+  bottom material] for all 65,736 drivable segments. The ground profile is
+  the road's snap-to-terrain: the bottom face (roadbed) follows it exactly,
+  the top face (asphalt) rides at ground + 0.55 lift.
 - `water.json` — [name, "body"|"stream", [[x, z], ...]] — 1,725 features
   (lakes/ponds as body rings; rivers/streams as lines).
 - `buildings.json.gz` — (gzipped; decompresses to buildings.json) [name, building type, height (m), [[x, z], ...]] for
@@ -20,6 +23,9 @@ completely separate from the old game's data — nothing was copied from it.
   documented default by type (house 4.5, apartments 12, commercial 7,
   industrial 8, school 8, church 9, garage/shed 3, other 5).
 - `places.json` — [name, category, [x, z]] — 4,765 named places (Map 2 data).
+- `materials.json` — the material table + layer order (grass 0, water 1,
+  concrete/roadbed 2, asphalt 3; higher layer wins where surfaces overlap)
+  and the snap rules for buildings and roads.
 - `terrain.bin` + `terrain.json` — heightfield, Float32 LE, 1024 x 1536
   samples at ~31.8 u spacing; metadata gives the game-coord corners.
 - `viewer.html` — 3D viewer (Three.js) over this data: terrain (decimated

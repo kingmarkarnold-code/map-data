@@ -79,11 +79,13 @@ stat.textContent = 'Terrain loaded. Loading roads...';
   const data = await J('roads.json');
   const pos = [], col = [];
   const cMajor = new THREE.Color('#f8fafc'), cMid = new THREE.Color('#cbd5e1'), cLocal = new THREE.Color('#94a3b8');
-  for (const [name, cat, w, pts] of data.roads) {
+  // Roads snap to terrain via their stored ground profile (g) + the
+  // material system's road lift (0.55) - no runtime sampling, no floating.
+  for (const [name, cat, w, pts, g] of data.roads) {
     const c = w >= 14 ? cMajor : (w >= 10 ? cMid : cLocal);
     for (let i = 0; i < pts.length - 1; i++) {
       const [x1, z1] = pts[i], [x2, z2] = pts[i + 1];
-      pos.push(x1, heightAt(x1, z1) + 0.5, z1, x2, heightAt(x2, z2) + 0.5, z2);
+      pos.push(x1, (g[i] - Y0) + 0.55, z1, x2, (g[i + 1] - Y0) + 0.55, z2);
       col.push(c.r, c.g, c.b, c.r, c.g, c.b);
     }
   }
@@ -133,8 +135,12 @@ stat.textContent = 'Roads loaded. Loading water + buildings...';
     let minx = 1e18, maxx = -1e18, minz = 1e18, maxz = -1e18;
     ring.forEach(p => { minx = Math.min(minx, p[0]); maxx = Math.max(maxx, p[0]); minz = Math.min(minz, p[1]); maxz = Math.max(maxz, p[1]); });
     const sx = Math.max(1.5, maxx - minx), sz = Math.max(1.5, maxz - minz);
-    P.set(cx, heightAt(cx, cz) - 0.4, cz);
-    S.set(sx, b[2], sz);
+    // Snap-to-terrain: the foundation (bottom face, concrete material) sits
+    // at the stored pad height; the skirt extends below it to the lowest
+    // ground under the footprint, so no corner ever floats.
+    const pad = b[4] - Y0, skirt = b[5];
+    P.set(cx, pad - skirt, cz);
+    S.set(sx, b[2] + skirt, sz);
     Q.setFromAxisAngle(UP, 0);
     M.compose(P, Q, S);
     inst.setMatrixAt(i, M);
