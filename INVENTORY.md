@@ -18,8 +18,14 @@ the clipped record lives in this repo.
   apartments, plazas, airport, transit, cemeteries, civic.
 - `street_names.json` — every distinct street name found: **6,600 names**,
   with segment counts.
+- `railroads.geojson` — every rail segment inside (1,257): Norfolk Southern,
+  MARTA rail, CSX, Fulton County Railway.
+- `bridges.geojson` — every bridge/overpass segment inside (747), from the
+  road data's bridge tags (Joshua's terms: bridge = over water, overpass =
+  over another road).
 - `resource-map-1-roads-water.html` — VIEWABLE map 1: roads + street-name
-  labels (zoom 15+), lakes/ponds/rivers/streams, parks, golf courses.
+  labels (zoom 15+), lakes/ponds/rivers/streams, parks, golf courses,
+  railroads, bridges & overpasses (orange highlight layer).
 - `resource-map-2-places.html` — VIEWABLE map 2: businesses, gas stations,
   schools, churches, restaurants, apartments, plazas, and every other named
   place as toggleable layers (labels at zoom 16+).
