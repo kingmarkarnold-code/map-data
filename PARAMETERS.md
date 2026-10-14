@@ -12,8 +12,9 @@ Small tweaks pending Joshua's review (noted 2026-10-13); the structure stands.
   extent — NE vertex REVISED 2026-10-14 (Joshua): Piedmont Rd NE & Monroe Dr NE
   junction (33.79703, -84.36902), right at Piedmont Park's SE corner (the old
   downtown point, 33.7586, -84.38908, is now an interior landmark) → SE corner
-  (33.535, -84.392), pushed ~1/2 mile
-  past the Riverdale apartments so the whole complex sits inside → Fairburn
+  (33.535, -84.392) — SE vertex REVISED 2026-10-14 (Joshua): the exact Taylor Rd
+  & Flint River Rd junction, Riverdale (33.51822, -84.39097); the Riverdale
+  apartments remain well inside → Fairburn
   exit, I-85 S (33.53045, -84.60615) → back to the NW vertex.
 - Read the western border northbound: US 29 / Roosevelt Hwy runs on the RIGHT
   (east) side going north. Through Fairburn it is West Broad St — there is no
