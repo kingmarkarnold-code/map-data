@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Buried street - view only</title>
+<title>Buried street - walkable</title>
 <style>
   html,body,#app{height:100%;margin:0;background:#0f1420;font-family:system-ui;color:#e5e7eb}
   #info{position:absolute;top:0;left:0;right:0;padding:10px 14px;background:rgba(10,14,24,.88);z-index:5}
@@ -11,19 +11,27 @@
   #btns{position:absolute;bottom:12px;left:0;right:0;text-align:center;z-index:5}
   button{background:#1f2937;color:#e5e7eb;border:1px solid #4b5563;border-radius:999px;padding:8px 14px;margin:0 3px;font-size:13px}
   button.on{background:#2563eb;border-color:#2563eb}
+
+  #hud{position:absolute;top:132px;left:0;right:0;text-align:center;z-index:6;pointer-events:none}
+  #hud span{background:rgba(10,14,24,.85);padding:6px 14px;border-radius:999px;font-size:14px;font-weight:600}
+  #joy{position:absolute;bottom:18px;left:16px;width:118px;height:118px;border-radius:50%;background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.35);z-index:7;touch-action:none}
+  #knob{position:absolute;left:50%;top:50%;width:50px;height:50px;border-radius:50%;background:rgba(255,255,255,.45);transform:translate(-50%,-50%)}
 </style></head><body>
 <div id="app"></div>
 <div id="info">
-  <h3>King James Drive Southwest — STREET VIEW (view only) — new controls</h3>
-  <p>This is the buried street, view only — walking comes back in the next step once you confirm you can see this. The dark ribbon is <b>King James Drive Southwest</b> at its true width and height; it dives under the hill and runs <b>up to 15 m underground</b> (red marker). The cyan line shows its buried path. The character stands next to the street at the near end. Drag to pan, use two fingers to orbit, pinch to zoom.</p>
+  <h3>King James Drive Southwest — STREET VIEW — walkable</h3>
+  <p>The dark ribbon is <b>King James Drive Southwest</b> at its true width and height; it dives under the hill and runs <b>up to 15 m underground</b> (red marker). The cyan line shows its buried path. The character stands next to the street. <b>Walk him with the joystick (bottom left) or W A S D / arrow keys</b> — he follows the real surface, street included, even underground. The readout tells you when he's under the ground. Drag still pans, two fingers orbit.</p>
   
 </div>
 <div id="btns">
   
   
   <button id="bSpin" class="on">Auto-spin</button>
+  <button id="bXray" class="on">X-ray street</button>
   <button id="bFind">Find character</button>
 </div>
+<div id="hud"><span id="hudText">On the surface</span></div>
+<div id="joy"><div id="knob"></div></div>
 <script src="https://unpkg.com/three@0.128.0/build/three.min.js"></script>
 <script src="https://unpkg.com/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
 <script>
@@ -69,6 +77,23 @@ function groundAt(x, z) {
   const ix = Math.min(n - 2, Math.max(0, Math.floor(fx))), iz = Math.min(n - 2, Math.max(0, Math.floor(fz)));
   const ax = fx - ix, az = fz - iz;
   return F[iz][ix]*(1-ax)*(1-az) + F[iz][ix+1]*ax*(1-az) + F[iz+1][ix]*(1-ax)*az + F[iz+1][ix+1]*ax*az;
+}
+// Walking surface: street height when on the street, ground elsewhere.
+function roadSurfaceAt(x, z) {
+  const n = RD.xs.length; let best = 1e18, bestY = null;
+  for (let i = 0; i < n - 1; i++) {
+    const ax = RD.xs[i], az = RD.zs[i], bx = RD.xs[i + 1], bz = RD.zs[i + 1];
+    const abx = bx - ax, abz = bz - az;
+    const t = Math.max(0, Math.min(1, ((x - ax) * abx + (z - az) * abz) / (abx * abx + abz * abz || 1)));
+    const px = ax + abx * t, pz = az + abz * t;
+    const d2 = (x - px) * (x - px) + (z - pz) * (z - pz);
+    if (d2 < best) { best = d2; bestY = RD.road_y[i] + (RD.road_y[i + 1] - RD.road_y[i]) * t; }
+  }
+  return (Math.sqrt(best) <= RD.w / 2 + 0.25) ? bestY : null;
+}
+function surfaceAt(x, z) {
+  const r = roadSurfaceAt(x, z);
+  return (r !== null) ? {y: r, onRoad: true} : {y: groundAt(x, z), onRoad: false};
 }
 // The street: true-width ribbon at its real (buried) heights.
 const RD = S.road;
@@ -158,5 +183,76 @@ for (const nb of S.neighbors) {
 
 document.getElementById('bSpin').onclick = e => { ctl.autoRotate = !ctl.autoRotate; e.target.classList.toggle('on', ctl.autoRotate); };
 addEventListener('resize', () => { cam.aspect = innerWidth/innerHeight; cam.updateProjectionMatrix(); ren.setSize(innerWidth, innerHeight); });
-(function loop(){ requestAnimationFrame(loop); ctl.update(); ren.render(scene, cam); })();
+// ---- Player controls: static joystick (bottom left) + WASD/arrows ----
+// He walks the real surface; the camera follows by his displacement only
+// while he moves, so drag-pan and two-finger orbit stay free when he stops.
+const P = {x: S.char.x, z: S.char.z, heading: Math.atan2(RD.xs[8] - S.char.x, RD.zs[8] - S.char.z)};
+function placeChar() {
+  const s = surfaceAt(P.x, P.z);
+  charGrp.position.set(P.x - CX, s.y - PAD, P.z - CZ);
+  charGrp.rotation.y = P.heading;
+  return s;
+}
+let surf = placeChar();
+const joyVec = {x: 0, y: 0};
+{
+  const joy = document.getElementById('joy'), knob = document.getElementById('knob');
+  let pid = null;
+  const setKnob = (dx, dy) => knob.style.transform = 'translate(calc(-50% + ' + dx + 'px), calc(-50% + ' + dy + 'px))';
+  joy.addEventListener('pointerdown', e => { pid = e.pointerId; joy.setPointerCapture(pid); });
+  joy.addEventListener('pointermove', e => {
+    if (e.pointerId !== pid) return;
+    const r = joy.getBoundingClientRect();
+    let dx = e.clientX - (r.left + r.width / 2), dy = e.clientY - (r.top + r.height / 2);
+    const m = Math.hypot(dx, dy), max = r.width / 2 - 6;
+    if (m > max) { dx *= max / m; dy *= max / m; }
+    setKnob(dx, dy); joyVec.x = dx / max; joyVec.y = dy / max;
+  });
+  const end = e => { if (e.pointerId === pid) { pid = null; joyVec.x = joyVec.y = 0; setKnob(0, 0); } };
+  joy.addEventListener('pointerup', end); joy.addEventListener('pointercancel', end);
+}
+const keys = {};
+addEventListener('keydown', e => keys[e.key.toLowerCase()] = true);
+addEventListener('keyup', e => keys[e.key.toLowerCase()] = false);
+document.getElementById('bXray').onclick = e => { xray.visible = !xray.visible; e.target.classList.toggle('on', xray.visible); };
+const hud = document.getElementById('hudText');
+const spinBtn = document.getElementById('bSpin');
+const clock = new THREE.Clock();
+function frame() {
+  requestAnimationFrame(frame);
+  const dt = Math.min(0.05, clock.getDelta());
+  let ix = joyVec.x, iy = joyVec.y;
+  if (keys['w'] || keys['arrowup']) iy -= 1;
+  if (keys['s'] || keys['arrowdown']) iy += 1;
+  if (keys['a'] || keys['arrowleft']) ix -= 1;
+  if (keys['d'] || keys['arrowright']) ix += 1;
+  const mag = Math.hypot(ix, iy);
+  if (mag > 0.08) {
+    if (ctl.autoRotate) { ctl.autoRotate = false; if (spinBtn) spinBtn.classList.remove('on'); }
+    const cl = Math.min(1, mag), il = mag || 1; ix /= il; iy /= il;
+    const fwd = new THREE.Vector3(); cam.getWorldDirection(fwd); fwd.y = 0; fwd.normalize();
+    const right = new THREE.Vector3(-fwd.z, 0, fwd.x);
+    const mv = fwd.multiplyScalar(-iy).add(right.multiplyScalar(ix));
+    const sp = 3.4 * cl * dt;
+    const ox = P.x, oz = P.z;
+    P.x += mv.x * sp; P.z += mv.z * sp;
+    P.x = Math.max(CX - S.radius + 3, Math.min(CX + S.radius - 3, P.x));
+    P.z = Math.max(CZ - S.radius + 3, Math.min(CZ + S.radius - 3, P.z));
+    const th = Math.atan2(mv.x, mv.z);
+    let dh = th - P.heading;
+    while (dh > Math.PI) dh -= 2 * Math.PI; while (dh < -Math.PI) dh += 2 * Math.PI;
+    P.heading += dh * Math.min(1, dt * 10);
+    surf = placeChar();
+    // Follow by displacement: keep whatever pan/orbit offset the user has.
+    const shift = new THREE.Vector3(P.x - ox, 0, P.z - oz);
+    ctl.target.add(shift); cam.position.add(shift);
+  }
+  const g = groundAt(P.x, P.z), under = g - surf.y;
+  hud.textContent = surf.onRoad
+    ? (under > 0.3 ? 'On the street — ' + under.toFixed(1) + ' m UNDER the ground here' : 'On the street — on the surface')
+    : 'Off the street — on the surface';
+  hud.style.color = (surf.onRoad && under > 0.3) ? '#fca5a5' : '#e5e7eb';
+  ctl.update(); ren.render(scene, cam);
+}
+frame();
 </script></body></html>
