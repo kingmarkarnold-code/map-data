@@ -137,3 +137,15 @@ Small tweaks pending Joshua's review (noted 2026-10-13); the structure stands.
 - Stylized look stays — no chasing higher resolution or photorealism.
 - All editors pull from the game's actual data as source of truth. No editor
   maintains its own separate list.
+
+## Addendum (2026-10-14, Joshua)
+- The border polygon is a DATA boundary ONLY — never render it in the game.
+  The first build showed a red line around the map in-game; Joshua ordered it
+  removed. Resource/reference maps may show the outline; the game must not.
+- Resource maps: `resource-map-1-roads-water.html` (roads + street names,
+  water, parks, golf, railroads, bridges/overpasses) and
+  `resource-map-2-places.html` (businesses, gas stations, schools, churches,
+  all named places) are the standing reference — check them before
+  re-researching anything on Google.
+- Railroads and bridges/overpasses are first-class map data (railroads.geojson,
+  bridges.geojson), per Joshua 2026-10-14.
