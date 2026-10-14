@@ -6,9 +6,10 @@ Small tweaks pending Joshua's review (noted 2026-10-13); the structure stands.
 ## 1. The world & border
 - Border polygon (confirmed 2026-10-07; NW vertex REVISED 2026-10-14 by Joshua):
   NW vertex at the Zaxby's pinpoint, 5090 Floyd Rd SW, Mableton — corner point
-  (33.83063, -84.57801), offset west from the Zaxby's so the South Cobb Regional
+  (33.83063, -84.57853), offset west from the Zaxby's so the South Cobb Regional
   Library (805 Clay Rd SW) sits exactly 100 YARDS inside the western edge
-  (buffer rule) and a good portion of Clay Rd is included → downtown Atlanta NE
+  (buffer rule; offset recomputed 2026-10-14 against the Wendy's-anchored
+  western edge, NW corner moved 48 m further west to restore the buffer) and a good portion of Clay Rd is included → downtown Atlanta NE
   extent — NE vertex REVISED 2026-10-14 (Joshua): Piedmont Rd NE & Monroe Dr NE
   junction (33.79703, -84.36902), right at Piedmont Park's SE corner (the old
   downtown point, 33.7586, -84.38908, is now an interior landmark) → SE corner
