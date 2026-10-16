@@ -16,13 +16,16 @@
 
   #hud{position:static;text-align:center;pointer-events:none;padding-top:8px}
   #hud span{background:rgba(10,14,24,.85);padding:6px 14px;border-radius:999px;font-size:14px;font-weight:600}
+  #streetBanner{position:absolute;top:8px;left:50%;transform:translateX(-50%);z-index:25;background:rgba(10,14,24,.85);color:#e5e7eb;padding:6px 14px;border-radius:999px;font-size:14px;font-weight:600;line-height:1.25;white-space:nowrap;pointer-events:none;box-shadow:0 2px 10px rgba(0,0,0,.5)}
+  @media (max-width:560px){#streetBanner{font-size:12.5px;padding:5px 10px;max-width:calc(100vw - 210px);overflow:hidden;text-overflow:ellipsis}}
   #joy{position:absolute;bottom:18px;left:16px;width:118px;height:118px;border-radius:50%;background:rgba(10,14,24,.55);border:2px solid rgba(255,255,255,.9);box-shadow:0 2px 14px rgba(0,0,0,.5);z-index:20;touch-action:none}
   #knob{position:absolute;left:50%;top:50%;width:52px;height:52px;border-radius:50%;background:#facc15;border:2px solid #111827;transform:translate(-50%,-50%)}
 </style></head><body>
 <div id="app"></div>
 <button id="infoToggle" aria-expanded="false" aria-controls="info" title="Show / hide info">🗒️ <span id="infoArrow">▾</span></button>
+<div id="streetBanner"></div>
 <div id="info">
-  <h3>King James Drive Southwest — STREET VIEW — walkable v7</h3>
+  <h3>King James Drive Southwest — STREET VIEW — walkable v8</h3>
   <p>The dark ribbon is <b>King James Drive Southwest</b> at its true width — and in this test the road itself is fixed the way Joshua directed: it is cut into short segments every 2.5 m and every point's height is set from the ground, so the road <b>bends and rides on the terrain</b> instead of diving through the hill. Where it used to run <b>up to 15 m underground</b>, it now stays on the surface the whole way (the red marker stands at the old worst spot). The light-blue road is the same street seen through the hill (toggle: X-ray street) — it should hug the ground end to end. Every other street in view is unchanged — solid surface, true width, its own stored heights. The character stands next to the street. <b>Austin Road Southwest</b>, which tees into King James at this spot, gets the same fix in this test — its stored heights left about 200 m of it shallowly underground in stretches (worst about 1.5 m). <b>Walk him with the joystick (bottom left) or W A S D / arrow keys</b> — walk King James end to end and the readout should say <b>on the surface</b> the whole way. Drag still pans, two fingers orbit.</p>
   <div id="hud"><span id="hudText">On the surface</span></div>
 </div>
@@ -245,6 +248,7 @@ addEventListener('keydown', e => keys[e.key.toLowerCase()] = true);
 addEventListener('keyup', e => keys[e.key.toLowerCase()] = false);
 document.getElementById('bXray').onclick = e => { xray.visible = !xray.visible; e.target.classList.toggle('on', xray.visible); };
 const hud = document.getElementById('hudText');
+const streetBanner = document.getElementById('streetBanner');
 const spinBtn = document.getElementById('bSpin');
 const clock = new THREE.Clock();
 function frame() {
@@ -281,13 +285,16 @@ function frame() {
   hud.textContent = surf.onRoad
     ? (depth > 0.3 ? 'Over ' + nm + ' — it runs ' + depth.toFixed(1) + ' m UNDER you here' : 'On ' + nm + ' — on the surface')
     : 'Off the street — on the surface';
+  // v8: mirror the street identification to the centered top banner — same surf/nm
+  // computation as the HUD above (one source of truth, two displays).
+  streetBanner.textContent = surf.onRoad ? nm : 'Off the street';
   hud.style.color = (surf.onRoad && depth > 0.3) ? '#fca5a5' : '#e5e7eb';
   ctl.update(); ren.render(scene, cam);
 }
 frame();
 </script>
 <script>
-// v7: the info panel starts minimized; the notepad button drops it down (scrollable) and tucks it away.
+// The info panel starts minimized; the notepad button drops it down (scrollable) and tucks it away.
 (function(){
   var btn = document.getElementById('infoToggle'), panel = document.getElementById('info'), arrow = document.getElementById('infoArrow');
   btn.addEventListener('click', function(){
