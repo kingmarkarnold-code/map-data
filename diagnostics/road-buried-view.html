@@ -25,8 +25,8 @@
 <button id="infoToggle" aria-expanded="false" aria-controls="info" title="Show / hide info">🗒️ <span id="infoArrow">▾</span></button>
 <div id="streetBanner"></div>
 <div id="info">
-  <h3>King James Drive Southwest — STREET VIEW — walkable v9</h3>
-  <p>The dark ribbon is <b>King James Drive Southwest</b> at its true width, segmented every 2.5 m with every point's height set from the ground, so it <b>rides on the surface</b> instead of diving through the hill (the red marker stands at the old worst spot). <b>New in this test:</b> (1) A <b>red car</b> is parked on the street next to the character - walk up to it and press <b>E</b> or the <b>🚗 Get in</b> button to drive (W/S or ↑/↓ = gas &amp; brake/reverse, A/D or ←/→ = steer, Space = handbrake; the joystick drives too). Press E again to get out. (2) The test area is now a <b>full one-mile radius</b> around the start, and <b>every street in it that ran underground anywhere got the same segment-and-conform fix</b> - 82 road records, about <b>7.1 km of buried road</b> (worst after King James itself: King Arthur Road, 11.3 m under). This is the transform only - <b>not baked</b>; the real map data is untouched, and streets already on the surface keep their stored heights. The light-blue road is King James seen through the ground (toggle: X-ray street). <b>Walk or drive with the joystick (bottom left) or keys</b> - the readout should say <b>on the surface</b> everywhere. Drag pans, two fingers orbit.</p>
+  <h3>King James Drive Southwest — STREET VIEW — walkable v10</h3>
+  <p>The dark ribbon is <b>King James Drive Southwest</b> at its true width, segmented every 2.5 m with every point's height set from the ground, so it <b>rides on the surface</b> instead of diving through the hill (the red marker stands at the old worst spot). <b>New in this test:</b> (1) A <b>red car</b> is parked on the street next to the character - walk up to it and press <b>E</b> or the <b>🚗 Get in</b> button to drive (W/S or ↑/↓ = gas &amp; brake/reverse, A/D or ←/→ = steer, Space = handbrake; the joystick drives too). Press E again to get out - <b>new in v10:</b> while you drive, the view sits <b>on the roof of the car, facing forward</b>, turning and leaning with the car, so the car stays centred and visible. (2) The test area is now a <b>full one-mile radius</b> around the start, and <b>every street in it that ran underground anywhere got the same segment-and-conform fix</b> - 82 road records, about <b>7.1 km of buried road</b> (worst after King James itself: King Arthur Road, 11.3 m under). This is the transform only - <b>not baked</b>; the real map data is untouched, and streets already on the surface keep their stored heights. The light-blue road is King James seen through the ground (toggle: X-ray street). <b>Walk or drive with the joystick (bottom left) or keys</b> - the readout should say <b>on the surface</b> everywhere. Drag pans, two fingers orbit.</p>
   <div id="hud"><span id="hudText">On the surface</span></div>
 </div>
 <div id="btns">
@@ -323,14 +323,72 @@ function placeCar() {
   return s;
 }
 let carSurf = placeCar();
+// ---- v10 roof camera (Joshua): on entering the car the view moves onto
+// the car's roof, facing forward, and stays glued there - it steers and
+// pitches WITH the car, so there is no separate camera rotation to fight
+// while driving. (The v9 follow camera kept the walking offset, which
+// left the car low in the frame, buried under the steering controls.)
+// OrbitControls is disabled while driving; the saved orbit state below
+// keeps following the car by displacement exactly as v9 rendered it, so
+// getting out restores the walk camera seamlessly. Entering glides the
+// view onto the roof over ~0.4 s; exiting cuts straight back.
+let camSave = null;    // {pos, tgt}: the orbit camera state while driving
+let roofGlide = 1;     // 0..1 enter-glide progress (1 = fully mounted)
+// The mount, in car-local terms (+Z = the car's forward): centred
+// width-wise; 1.52 m up = 0.15 m above the cab roof (cab top is 1.37 m),
+// so nothing clips; 0.55 m behind the car's centre, so the car reads as
+// under the view. It looks at a point 10 m ahead and a little lower
+// (1.02 m) - a slight downward bias so the road ahead stays in frame.
+const ROOF = {y: 1.52, back: 0.55, lookY: 1.02, lookAhead: 10};
+function carLocalToWorld(lx, ly, lz) {
+  // carGrp's exact transform: pitch about its sideways axis by
+  // carGrp.rotation.x (the grade pitch placeCar() sets), then yaw by
+  // CAR.heading (the group's Euler order is YXZ); carGrp has no parent
+  // and no scale, so this is the whole of it.
+  const th = carGrp.rotation.x, ct = Math.cos(th), st = Math.sin(th);
+  const y1 = ly * ct - lz * st, z1 = ly * st + lz * ct;
+  const ch = Math.cos(CAR.heading), sh = Math.sin(CAR.heading);
+  return [carGrp.position.x + lx * ch + z1 * sh,
+          carGrp.position.y + y1,
+          carGrp.position.z - lx * sh + z1 * ch];
+}
+function roofCam(dt) {
+  const mp = carLocalToWorld(0, ROOF.y, -ROOF.back);        // mount point
+  const lp = carLocalToWorld(0, ROOF.lookY, ROOF.lookAhead); // look point
+  if (roofGlide < 1 && camSave) {
+    // Entering: glide from the saved orbit view onto the moving mount.
+    roofGlide = Math.min(1, roofGlide + dt / 0.4);
+    const b = roofGlide * roofGlide * (3 - 2 * roofGlide);  // smoothstep
+    cam.position.set(camSave.pos.x + (mp[0] - camSave.pos.x) * b,
+                     camSave.pos.y + (mp[1] - camSave.pos.y) * b,
+                     camSave.pos.z + (mp[2] - camSave.pos.z) * b);
+    cam.lookAt(camSave.tgt.x + (lp[0] - camSave.tgt.x) * b,
+               camSave.tgt.y + (lp[1] - camSave.tgt.y) * b,
+               camSave.tgt.z + (lp[2] - camSave.tgt.z) * b);
+  } else {
+    cam.position.set(mp[0], mp[1], mp[2]);
+    cam.lookAt(lp[0], lp[1], lp[2]);
+  }
+}
 function toggleVehicle() {
   const btn = document.getElementById('bAction');
   if (mode === 'walk') {
     if (Math.hypot(P.x - CAR.x, P.z - CAR.z) > 3.4) return;  // walk up first
     mode = 'drive'; charGrp.visible = false;
+    // v10: hand the view to the roof camera - save the orbit camera state
+    // (it keeps travelling with the car invisibly; see frame()) and
+    // disable OrbitControls so drags can't fight the mount.
+    camSave = {pos: cam.position.clone(), tgt: ctl.target.clone()};
+    roofGlide = 0;
+    ctl.enabled = false;
     if (btn) btn.textContent = '🚪 Get out';
   } else {
     mode = 'walk'; CAR.speed = 0;
+    // v10: restore the orbit camera to exactly the state v9 would have
+    // left it in (the saved state travelled with the car) and hand the
+    // controls back.
+    if (camSave) { cam.position.copy(camSave.pos); ctl.target.copy(camSave.tgt); camSave = null; }
+    ctl.enabled = true;
     P.x = CAR.x + Math.cos(CAR.heading) * 2.1;    // step out on the car's right
     P.z = CAR.z - Math.sin(CAR.heading) * 2.1;
     P.heading = CAR.heading;
@@ -409,7 +467,11 @@ function frame() {
     if (dcC > maxRC) { CAR.x = CX + (CAR.x - CX) / dcC * maxRC; CAR.z = CZ + (CAR.z - CZ) / dcC * maxRC; CAR.speed = 0; }
     surf = placeCar();
     const shiftC = new THREE.Vector3(CAR.x - ox, 0, CAR.z - oz);
-    ctl.target.add(shiftC); cam.position.add(shiftC);
+    // v10: the RENDERED camera is the roof camera now. The saved orbit
+    // state still follows by the same displacement (invisible), so the
+    // exit restore lands exactly where v9's camera would have been.
+    if (camSave) { camSave.pos.add(shiftC); camSave.tgt.add(shiftC); }
+    roofCam(dt);
   } else if (mag > 0.08) {
     if (ctl.autoRotate) { ctl.autoRotate = false; if (spinBtn) spinBtn.classList.remove('on'); }
     const cl = Math.min(1, mag), il = mag || 1; ix /= il; iy /= il;
@@ -439,7 +501,10 @@ function frame() {
   // computation as the HUD above (one source of truth, two displays).
   streetBanner.textContent = surf.onRoad ? nm : 'Off the street';
   hud.style.color = (surf.onRoad && depth > 0.3) ? '#fca5a5' : '#e5e7eb';
-  ctl.update(); ren.render(scene, cam);
+  // v10: OrbitControls updates only on foot - while driving, the roof
+  // camera owns the view (and the controls are disabled anyway).
+  if (mode === 'walk') ctl.update();
+  ren.render(scene, cam);
 }
 frame();
 </script>
