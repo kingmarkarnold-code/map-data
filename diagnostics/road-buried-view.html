@@ -7,6 +7,10 @@
   #info{position:absolute;top:54px;left:0;right:0;padding:10px 14px;background:rgba(10,14,24,.92);z-index:5;display:none;max-height:45vh;overflow-y:auto}
   #info.open{display:block}
   #infoToggle{position:absolute;top:8px;left:8px;z-index:30;background:#facc15;color:#111827;border:2px solid #111827;border-radius:999px;padding:9px 15px;margin:0;font-size:18px;font-weight:700;line-height:1;cursor:pointer;box-shadow:0 2px 10px rgba(0,0,0,.5)}
+  /* Orbit toggle (v14): top-right corner. The centred street banner is
+     capped at 100vw-210px wide on <=560px screens, leaving >=105px at
+     each side - this button (~86px wide at right:8px) stays clear. */
+  #orbitBtn{position:absolute;top:8px;right:8px;z-index:30;margin:0;cursor:pointer;box-shadow:0 2px 10px rgba(0,0,0,.5)}
   #info h3{margin:0 0 4px;font-size:16px}
   #info p{margin:2px 0;font-size:13px;line-height:1.45}
   .good{color:#86efac;font-weight:700}
@@ -46,9 +50,10 @@
 <div id="app"></div>
 <button id="infoToggle" aria-expanded="false" aria-controls="info" title="Show / hide info">🗒️ <span id="infoArrow">▾</span></button>
 <div id="streetBanner"></div>
+<button id="orbitBtn" aria-pressed="false" title="Toggle orbit mode">🔄 Orbit</button>
 <div id="info">
-  <h3>King James Drive Southwest — STREET VIEW — walkable v13</h3>
-  <p>The dark ribbon is <b>King James Drive Southwest</b> at its true width, segmented every 2.5 m with every point's height set from the ground, so it <b>rides on the surface</b> instead of diving through the hill (the red marker stands at the old worst spot). A <b>red car</b> is parked on the street next to the character - walk up to it and press <b>E</b> or the <b>🚗 Get in</b> button to drive. Driving uses big press-and-hold buttons - <b>◀ ▶ steer</b> (bottom left) and <b>GAS / BRAKE pedals</b> (bottom right) - or the keys (W/S or ↑/↓ = gas &amp; brake/reverse, A/D or ←/→ = steer). Press E again to get out. While you drive, the view sits <b>on the roof of the car, facing forward</b>, turning and leaning with the car, tilted up so only a <b>sliver of hood</b> shows at the bottom of the screen. <b>New in v13:</b> (1) <b>Every street now sits exactly 0.01 m over the ground you see.</b> Joshua spotted a slight space under the road in places: the heights had been set from the survey ground, but the drawn ground mesh sags a few centimetres against the survey between its posts, and the ribbons were flat across their width - so edges floated or dug in on slopes (worst about 4 m on the widest road). Now each street is <b>draped</b>: its centre and both edges follow the drawn ground itself at +0.01 m, with extra points wherever the ground bends, so there is <b>no space under the road anywhere</b> in the one-mile circle. (2) Everything from v12 carries over: <b>every street</b> in the radius conformed (<b>all 520 road records</b>; about <b>7.1 km</b> had been buried) and the <b>houses moved off streets</b> - see the buildings line under this panel. (3) The roof <b>camera panel</b>: tap the <b>📷 button</b> while driving to <b>move the camera</b> (Forward / Back / Left / Right / Up / Down) and <b>tilt</b> it, then <b>Save camera</b> to keep the whole setup on this device. This is the transform only - <b>not baked</b>; the real map data is untouched. The light-blue road is King James seen through the ground (toggle: X-ray street). <b>Walk with the joystick (bottom left) or keys; drive with the buttons or keys</b> - the readout should say <b>on the surface</b> everywhere. Drag pans, two fingers orbit.</p>
+  <h3>King James Drive Southwest — STREET VIEW — walkable v14</h3>
+  <p>The dark ribbon is <b>King James Drive Southwest</b> at its true width, segmented every 2.5 m with every point's height set from the ground, so it <b>rides on the surface</b> instead of diving through the hill (the red marker stands at the old worst spot). A <b>red car</b> is parked on the street next to the character - walk up to it and press <b>E</b> or the <b>🚗 Get in</b> button to drive. Driving uses big press-and-hold buttons - <b>◀ ▶ steer</b> (bottom left) and <b>GAS / BRAKE pedals</b> (bottom right) - or the keys (W/S or ↑/↓ = gas &amp; brake/reverse, A/D or ←/→ = steer). Press E again to get out. While you drive, the view sits <b>on the roof of the car, facing forward</b>, turning and leaning with the car, tilted up so only a <b>sliver of hood</b> shows at the bottom of the screen. <b>New in v14: orbiting is a button.</b> By default a drag <b>pans</b> and two fingers <b>zoom</b> — no gesture swings the camera. Tap the <b>🔄 Orbit</b> button (top right) and drags <b>orbit</b> instead; tap it again to go back. Also in this build, from v13: (1) <b>Every street now sits exactly 0.01 m over the ground you see.</b> Joshua spotted a slight space under the road in places: the heights had been set from the survey ground, but the drawn ground mesh sags a few centimetres against the survey between its posts, and the ribbons were flat across their width - so edges floated or dug in on slopes (worst about 4 m on the widest road). Now each street is <b>draped</b>: its centre and both edges follow the drawn ground itself at +0.01 m, with extra points wherever the ground bends, so there is <b>no space under the road anywhere</b> in the one-mile circle. (2) Everything from v12 carries over: <b>every street</b> in the radius conformed (<b>all 520 road records</b>; about <b>7.1 km</b> had been buried) and the <b>houses moved off streets</b> - see the buildings line under this panel. (3) The roof <b>camera panel</b>: tap the <b>📷 button</b> while driving to <b>move the camera</b> (Forward / Back / Left / Right / Up / Down) and <b>tilt</b> it, then <b>Save camera</b> to keep the whole setup on this device. This is the transform only - <b>not baked</b>; the real map data is untouched. The light-blue road is King James seen through the ground (toggle: X-ray street). <b>Walk with the joystick (bottom left) or keys; drive with the buttons or keys</b> - the readout should say <b>on the surface</b> everywhere. Drag pans, two fingers zoom — orbit only after tapping the 🔄 Orbit button.</p>
   <p>Buildings: <span id="bldgReadout">…</span></p>
   <div id="hud"><span id="hudText">On the surface</span></div>
 </div>
@@ -78,9 +83,28 @@ const ren = new THREE.WebGLRenderer({antialias:true});
 ren.setSize(innerWidth, innerHeight); ren.setPixelRatio(devicePixelRatio);
 document.getElementById('app').appendChild(ren.domElement);
 const ctl = new THREE.OrbitControls(cam, ren.domElement);
-// Joshua's controls (2026-10-14): drag pans, two fingers orbit.
-ctl.mouseButtons = { LEFT: THREE.MOUSE.PAN, MIDDLE: THREE.MOUSE.DOLLY, RIGHT: THREE.MOUSE.ROTATE };
-ctl.touches = { ONE: THREE.TOUCH.PAN, TWO: THREE.TOUCH.DOLLY_ROTATE };
+// v14 (Joshua, 2026-10-16): ORBIT IS A BUTTON-GATED MODE. Default
+// scheme (orbit OFF): one finger / left-drag PANS, two-finger pinch
+// ZOOMS - and NO gesture can orbit: two-finger drag is DOLLY_PAN and
+// even the right mouse button pans. Tap the Orbit button (top right)
+// and drags ORBIT instead (one finger / left-drag rotates, pinch still
+// zooms); tap it again to return to the default scheme. While driving
+// OrbitControls is disabled entirely (see toggleVehicle), and the
+// orbit mode set on foot is restored when he gets out.
+let orbitOn = false;
+function applyOrbitMode() {
+  if (orbitOn) {
+    ctl.mouseButtons = { LEFT: THREE.MOUSE.ROTATE, MIDDLE: THREE.MOUSE.DOLLY, RIGHT: THREE.MOUSE.ROTATE };
+    ctl.touches = { ONE: THREE.TOUCH.ROTATE, TWO: THREE.TOUCH.DOLLY_ROTATE };
+  } else {
+    ctl.mouseButtons = { LEFT: THREE.MOUSE.PAN, MIDDLE: THREE.MOUSE.DOLLY, RIGHT: THREE.MOUSE.PAN };
+    ctl.touches = { ONE: THREE.TOUCH.PAN, TWO: THREE.TOUCH.DOLLY_PAN };
+  }
+  const b = document.getElementById('orbitBtn');
+  if (b) { b.classList.toggle('on', orbitOn); b.setAttribute('aria-pressed', orbitOn ? 'true' : 'false'); }
+}
+applyOrbitMode();
+document.getElementById('orbitBtn').addEventListener('click', () => { orbitOn = !orbitOn; applyOrbitMode(); });
 ctl.screenSpacePanning = false;
 ctl.autoRotate = true; ctl.autoRotateSpeed = 0.5; ctl.maxDistance = 2600;
 scene.add(new THREE.AmbientLight(0xffffff, 0.85));
@@ -387,7 +411,8 @@ document.getElementById('bSpin').onclick = e => { ctl.autoRotate = !ctl.autoRota
 addEventListener('resize', () => { cam.aspect = innerWidth/innerHeight; cam.updateProjectionMatrix(); ren.setSize(innerWidth, innerHeight); });
 // ---- Player controls: static joystick (bottom left) + WASD/arrows ----
 // He walks the real surface; the camera follows by his displacement only
-// while he moves, so drag-pan and two-finger orbit stay free when he stops.
+// while he moves, so drag-pan and two-finger zoom stay free when he stops
+// (and orbiting too, while orbit mode is on - v14).
 const P = {x: S.char.x, z: S.char.z, heading: Math.atan2(RD.xs[8] - S.char.x, RD.zs[8] - S.char.z)};
 function placeChar() {
   const s = surfaceAt(P.x, P.z);
@@ -597,6 +622,7 @@ function toggleVehicle() {
     document.getElementById('steerBtns').style.display = 'flex';
     document.getElementById('pedalBtns').style.display = 'flex';
     document.getElementById('camBtn').style.display = 'block'; closeCamPanel();
+    document.getElementById('orbitBtn').style.display = 'none';  // v14: orbit button is a walk control
     joyVec.x = joyVec.y = 0;
     const kb = document.getElementById('knob'); if (kb) kb.style.transform = 'translate(-50%,-50%)';
     if (btn) btn.textContent = '🚪 Get out';
@@ -614,6 +640,7 @@ function toggleVehicle() {
     document.getElementById('steerBtns').style.display = 'none';
     document.getElementById('pedalBtns').style.display = 'none';
     document.getElementById('camBtn').style.display = 'none'; closeCamPanel();
+    document.getElementById('orbitBtn').style.display = '';  // v14: back on foot - orbit mode (orbitOn) was never touched, so it resumes as set
     driveBtn.gas = driveBtn.brake = driveBtn.left = driveBtn.right = 0;
     if (guideArrow) guideArrow.visible = false;
     P.x = CAR.x + Math.cos(CAR.heading) * 2.1;    // step out on the car's right
