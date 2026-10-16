@@ -20,13 +20,30 @@
   @media (max-width:560px){#streetBanner{font-size:12.5px;padding:5px 10px;max-width:calc(100vw - 210px);overflow:hidden;text-overflow:ellipsis}}
   #joy{position:absolute;bottom:18px;left:16px;width:118px;height:118px;border-radius:50%;background:rgba(10,14,24,.55);border:2px solid rgba(255,255,255,.9);box-shadow:0 2px 14px rgba(0,0,0,.5);z-index:20;touch-action:none}
   #knob{position:absolute;left:50%;top:50%;width:52px;height:52px;border-radius:50%;background:#facc15;border:2px solid #111827;transform:translate(-50%,-50%)}
+  /* v11 driving cluster: shown only while driving (the joystick hides).
+     Steering bottom-left, pedals bottom-right - press-and-hold buttons. */
+  #steerBtns{position:absolute;left:16px;bottom:18px;z-index:20;display:none;gap:12px}
+  #pedalBtns{position:absolute;right:16px;bottom:18px;z-index:20;display:none;gap:12px;align-items:flex-end}
+  .dbtn{background:rgba(10,14,24,.78);color:#e5e7eb;border:2px solid rgba(255,255,255,.9);border-radius:18px;font-weight:700;cursor:pointer;box-shadow:0 2px 14px rgba(0,0,0,.5);touch-action:none;user-select:none;-webkit-user-select:none;margin:0}
+  .dbtn.held{background:#facc15;color:#111827;border-color:#111827}
+  #btnLeft,#btnRight{width:84px;height:84px;font-size:32px;padding:0}
+  #btnBrake{width:88px;height:88px;font-size:16px;padding:0}
+  #btnGas{width:84px;height:136px;font-size:18px;padding:0}
+  /* v11 Tilt Camera box: its own bordered, labelled box sitting ABOVE the
+     GAS pedal with a clear gap - never part of the driving cluster. */
+  #tiltBox{position:absolute;right:16px;bottom:176px;z-index:20;display:none;background:rgba(10,14,24,.88);border:2px solid #facc15;border-radius:14px;padding:8px 10px;text-align:center;box-shadow:0 2px 14px rgba(0,0,0,.5)}
+  #tiltLabel{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#facc15;margin-bottom:6px}
+  #tiltBtns{display:flex;gap:8px;justify-content:center}
+  #btnTiltUp,#btnTiltDown{width:56px;height:48px;font-size:20px;padding:0;border-radius:12px}
+  #btnSaveTilt{margin-top:8px;width:100%;font-size:12.5px;padding:6px 8px}
 </style></head><body>
 <div id="app"></div>
 <button id="infoToggle" aria-expanded="false" aria-controls="info" title="Show / hide info">🗒️ <span id="infoArrow">▾</span></button>
 <div id="streetBanner"></div>
 <div id="info">
-  <h3>King James Drive Southwest — STREET VIEW — walkable v10</h3>
-  <p>The dark ribbon is <b>King James Drive Southwest</b> at its true width, segmented every 2.5 m with every point's height set from the ground, so it <b>rides on the surface</b> instead of diving through the hill (the red marker stands at the old worst spot). <b>New in this test:</b> (1) A <b>red car</b> is parked on the street next to the character - walk up to it and press <b>E</b> or the <b>🚗 Get in</b> button to drive (W/S or ↑/↓ = gas &amp; brake/reverse, A/D or ←/→ = steer, Space = handbrake; the joystick drives too). Press E again to get out - <b>new in v10:</b> while you drive, the view sits <b>on the roof of the car, facing forward</b>, turning and leaning with the car, so the car stays centred and visible. (2) The test area is now a <b>full one-mile radius</b> around the start, and <b>every street in it that ran underground anywhere got the same segment-and-conform fix</b> - 82 road records, about <b>7.1 km of buried road</b> (worst after King James itself: King Arthur Road, 11.3 m under). This is the transform only - <b>not baked</b>; the real map data is untouched, and streets already on the surface keep their stored heights. The light-blue road is King James seen through the ground (toggle: X-ray street). <b>Walk or drive with the joystick (bottom left) or keys</b> - the readout should say <b>on the surface</b> everywhere. Drag pans, two fingers orbit.</p>
+  <h3>King James Drive Southwest — STREET VIEW — walkable v11</h3>
+  <p>The dark ribbon is <b>King James Drive Southwest</b> at its true width, segmented every 2.5 m with every point's height set from the ground, so it <b>rides on the surface</b> instead of diving through the hill (the red marker stands at the old worst spot). <b>New in this test:</b> (1) A <b>red car</b> is parked on the street next to the character - walk up to it and press <b>E</b> or the <b>🚗 Get in</b> button to drive. Driving uses big press-and-hold buttons - <b>◀ ▶ steer</b> (bottom left) and <b>GAS / BRAKE pedals</b> (bottom right) - or the keys (W/S or ↑/↓ = gas &amp; brake/reverse, A/D or ←/→ = steer). Press E again to get out. While you drive, the view sits <b>on the roof of the car, facing forward</b>, turning and leaning with the car - <b>new in v11:</b> the roof view is tilted up so only a <b>sliver of hood</b> shows at the bottom of the screen, and the <b>Tilt Camera</b> box above the GAS pedal lets you adjust that angle live and keep your choice with <b>Save Tilt</b>. (2) The test area is now a <b>full one-mile radius</b> around the start, and <b>every street in it that ran underground anywhere got the same segment-and-conform fix</b> - 82 road records, about <b>7.1 km of buried road</b> (worst after King James itself: King Arthur Road, 11.3 m under). This is the transform only - <b>not baked</b>; the real map data is untouched, and streets already on the surface keep their stored heights. The light-blue road is King James seen through the ground (toggle: X-ray street). <b>Walk with the joystick (bottom left) or keys; drive with the buttons or keys</b> - the readout should say <b>on the surface</b> everywhere. Drag pans, two fingers orbit.</p>
+  <p>Roof camera tilt: <span id="tiltReadout">…</span></p>
   <div id="hud"><span id="hudText">On the surface</span></div>
 </div>
 <div id="btns">
@@ -38,6 +55,9 @@
   <button id="bAction">🚗 Get in</button>
 </div>
 <div id="joy"><div id="knob"></div></div>
+<div id="steerBtns"><button id="btnLeft" class="dbtn" aria-label="Steer left">◀</button><button id="btnRight" class="dbtn" aria-label="Steer right">▶</button></div>
+<div id="pedalBtns"><button id="btnBrake" class="dbtn" aria-label="Brake">BRAKE</button><button id="btnGas" class="dbtn" aria-label="Gas">GAS</button></div>
+<div id="tiltBox"><div id="tiltLabel">Tilt Camera</div><div id="tiltBtns"><button id="btnTiltUp" class="dbtn" aria-label="Tilt camera up">▲</button><button id="btnTiltDown" class="dbtn" aria-label="Tilt camera down">▼</button></div><button id="btnSaveTilt">Save Tilt</button></div>
 <script src="https://unpkg.com/three@0.128.0/build/three.min.js"></script>
 <script src="https://unpkg.com/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
 <script>
@@ -323,7 +343,7 @@ function placeCar() {
   return s;
 }
 let carSurf = placeCar();
-// ---- v10 roof camera (Joshua): on entering the car the view moves onto
+// ---- Roof camera (v10, Joshua): on entering the car the view moves onto
 // the car's roof, facing forward, and stays glued there - it steers and
 // pitches WITH the car, so there is no separate camera rotation to fight
 // while driving. (The v9 follow camera kept the walking offset, which
@@ -332,14 +352,60 @@ let carSurf = placeCar();
 // keeps following the car by displacement exactly as v9 rendered it, so
 // getting out restores the walk camera seamlessly. Entering glides the
 // view onto the roof over ~0.4 s; exiting cuts straight back.
+//
+// ---- v11 tilt (Joshua): v10's fixed ~2.7 deg downward tilt put the hood
+// across the bottom third of the screen - he couldn't see where he was
+// going. The pitch is now a USER CONTROL (the Tilt Camera box), starting
+// from a computed default, set by measurement, not by eye: the hood's
+// front-top edge (car-local (0, 0.895, 2.15)) sits 13.03 deg below the
+// mount's horizontal (a 0.625 m drop over the 2.70 m from the mount at
+// z=-0.55); with the camera's 55 deg FOV, the ray that lands at 90% of
+// frame height runs 22.59 deg below the view axis - so the axis starts
+// at 22.59 - 13.03 = +9.56 deg UP, leaving only a thin sliver of hood
+// (the bottom ~10% of the frame) and projecting the front bumper clean
+// out of the frame. The tilt is applied in car-local space, on top of
+// the car's grade pitch, exactly like the mount itself. Precedence for
+// the starting value: localStorage (his saved tilt) >
+// diagnostics/camera-tilt.json (fetched at load, so the same default can
+// be shared with the game later) > the built-in value below.
+const TILT_KEY = 'sa.preview.tilt.v1';
+const TILT_BUILTIN = 9.56;                    // degrees up (see above)
+const TILT_MIN = -10, TILT_MAX = 25;          // sane clamp range
+const TILT_STEP = 1;                          // degrees per tap
+let tiltDeg = TILT_BUILTIN;                   // current pitch
+let savedTilt = null;                         // his saved pitch, if any
+let tiltTouched = false;                      // he adjusted/saved by hand
+try {                                          // 1) his saved tilt wins
+  const sv = parseFloat(localStorage.getItem(TILT_KEY));
+  if (isFinite(sv)) { tiltDeg = Math.max(TILT_MIN, Math.min(TILT_MAX, sv)); savedTilt = tiltDeg; }
+} catch (e) { /* no storage available - fall through */ }
+if (savedTilt === null && typeof fetch === 'function') {
+  // 2) the shared repo default (any failure falls back silently to the
+  // built-in value; a hand adjustment made before it lands still wins).
+  fetch('camera-tilt.json').then(r => (r && r.ok) ? r.json() : null).then(j => {
+    const v = j ? parseFloat(j.tilt_deg) : NaN;
+    if (isFinite(v) && savedTilt === null && !tiltTouched) {
+      tiltDeg = Math.max(TILT_MIN, Math.min(TILT_MAX, v));
+      updateTiltReadout();
+    }
+  }).catch(() => {});
+}
+function updateTiltReadout() {
+  // The notepad panel's tilt line: live degrees, "(saved)" when the
+  // current value is the one stored on this device.
+  const el = document.getElementById('tiltReadout');
+  if (el) el.textContent = tiltDeg.toFixed(1) + '°' +
+    ((savedTilt !== null && Math.abs(savedTilt - tiltDeg) < 1e-9) ? ' (saved)' : '');
+}
 let camSave = null;    // {pos, tgt}: the orbit camera state while driving
 let roofGlide = 1;     // 0..1 enter-glide progress (1 = fully mounted)
 // The mount, in car-local terms (+Z = the car's forward): centred
 // width-wise; 1.52 m up = 0.15 m above the cab roof (cab top is 1.37 m),
 // so nothing clips; 0.55 m behind the car's centre, so the car reads as
-// under the view. It looks at a point 10 m ahead and a little lower
-// (1.02 m) - a slight downward bias so the road ahead stays in frame.
-const ROOF = {y: 1.52, back: 0.55, lookY: 1.02, lookAhead: 10};
+// under the view. It looks at a point 10 m ahead whose height comes from
+// the current tilt (tiltDeg): level with the mount at 0 deg, rising as
+// the tilt rises - see the v11 tilt note above.
+const ROOF = {y: 1.52, back: 0.55, lookAhead: 10};
 function carLocalToWorld(lx, ly, lz) {
   // carGrp's exact transform: pitch about its sideways axis by
   // carGrp.rotation.x (the grade pitch placeCar() sets), then yaw by
@@ -354,21 +420,41 @@ function carLocalToWorld(lx, ly, lz) {
 }
 function roofCam(dt) {
   const mp = carLocalToWorld(0, ROOF.y, -ROOF.back);        // mount point
-  const lp = carLocalToWorld(0, ROOF.lookY, ROOF.lookAhead); // look point
+  // Look point: 10 m ahead, its height set by the current tilt so the
+  // view axis pitches tiltDeg above the car's local horizontal.
+  const lookY = ROOF.y + Math.tan(tiltDeg * Math.PI / 180) * (ROOF.lookAhead + ROOF.back);
+  const lp = carLocalToWorld(0, lookY, ROOF.lookAhead);    // look point
+  let cp, ct;   // the camera position / target actually used this frame
   if (roofGlide < 1 && camSave) {
     // Entering: glide from the saved orbit view onto the moving mount.
     roofGlide = Math.min(1, roofGlide + dt / 0.4);
     const b = roofGlide * roofGlide * (3 - 2 * roofGlide);  // smoothstep
-    cam.position.set(camSave.pos.x + (mp[0] - camSave.pos.x) * b,
-                     camSave.pos.y + (mp[1] - camSave.pos.y) * b,
-                     camSave.pos.z + (mp[2] - camSave.pos.z) * b);
-    cam.lookAt(camSave.tgt.x + (lp[0] - camSave.tgt.x) * b,
-               camSave.tgt.y + (lp[1] - camSave.tgt.y) * b,
-               camSave.tgt.z + (lp[2] - camSave.tgt.z) * b);
-  } else {
-    cam.position.set(mp[0], mp[1], mp[2]);
-    cam.lookAt(lp[0], lp[1], lp[2]);
+    cp = [camSave.pos.x + (mp[0] - camSave.pos.x) * b,
+          camSave.pos.y + (mp[1] - camSave.pos.y) * b,
+          camSave.pos.z + (mp[2] - camSave.pos.z) * b];
+    ct = [camSave.tgt.x + (lp[0] - camSave.tgt.x) * b,
+          camSave.tgt.y + (lp[1] - camSave.tgt.y) * b,
+          camSave.tgt.z + (lp[2] - camSave.tgt.z) * b];
+  } else { cp = mp; ct = lp; }
+  cam.position.set(cp[0], cp[1], cp[2]);
+  cam.lookAt(ct[0], ct[1], ct[2]);
+  // Debug sight-line (?guide=1 only, see below): rides the real view.
+  if (guideArrow) {
+    guideArrow.position.set(cp[0], cp[1], cp[2]);
+    guideArrow.setDirection(new THREE.Vector3(ct[0] - cp[0], ct[1] - cp[1], ct[2] - cp[2]).normalize());
+    guideArrow.visible = true;
   }
+}
+// ---- Debug sight-line (?guide=1 ONLY): an arrow shot from the roof
+// camera along its view direction, used to set the camera tilt by
+// measurement instead of by eye. It is never even created in normal
+// play, so it can never appear in Joshua's game.
+const GUIDE_ON = (typeof location !== 'undefined') && /[?&]guide=1(&|$)/.test(location.search || '');
+let guideArrow = null;
+if (GUIDE_ON && THREE.ArrowHelper) {
+  guideArrow = new THREE.ArrowHelper(new THREE.Vector3(0, 0, 1), new THREE.Vector3(), 25, 0x22ff88, 2.5, 1.2);
+  guideArrow.visible = false;   // roofCam() shows it while driving
+  scene.add(guideArrow);
 }
 function toggleVehicle() {
   const btn = document.getElementById('bAction');
@@ -381,6 +467,14 @@ function toggleVehicle() {
     camSave = {pos: cam.position.clone(), tgt: ctl.target.clone()};
     roofGlide = 0;
     ctl.enabled = false;
+    // v11: swap the walking joystick for the driving cluster + tilt box,
+    // and clear any leftover walk input so it can't leak into driving.
+    document.getElementById('joy').style.display = 'none';
+    document.getElementById('steerBtns').style.display = 'flex';
+    document.getElementById('pedalBtns').style.display = 'flex';
+    document.getElementById('tiltBox').style.display = 'block';
+    joyVec.x = joyVec.y = 0;
+    const kb = document.getElementById('knob'); if (kb) kb.style.transform = 'translate(-50%,-50%)';
     if (btn) btn.textContent = '🚪 Get out';
   } else {
     mode = 'walk'; CAR.speed = 0;
@@ -389,6 +483,14 @@ function toggleVehicle() {
     // controls back.
     if (camSave) { cam.position.copy(camSave.pos); ctl.target.copy(camSave.tgt); camSave = null; }
     ctl.enabled = true;
+    // v11: hand the joystick back, hide the driving cluster + tilt box,
+    // and clear every driving input so nothing sticks into walking.
+    document.getElementById('joy').style.display = '';
+    document.getElementById('steerBtns').style.display = 'none';
+    document.getElementById('pedalBtns').style.display = 'none';
+    document.getElementById('tiltBox').style.display = 'none';
+    driveBtn.gas = driveBtn.brake = driveBtn.left = driveBtn.right = 0;
+    if (guideArrow) guideArrow.visible = false;
     P.x = CAR.x + Math.cos(CAR.heading) * 2.1;    // step out on the car's right
     P.z = CAR.z - Math.sin(CAR.heading) * 2.1;
     P.heading = CAR.heading;
@@ -413,6 +515,53 @@ const joyVec = {x: 0, y: 0};
   const end = e => { if (e.pointerId === pid) { pid = null; joyVec.x = joyVec.y = 0; setKnob(0, 0); } };
   joy.addEventListener('pointerup', end); joy.addEventListener('pointercancel', end);
 }
+// ---- v11 driving buttons (Joshua): while driving, the joystick is
+// replaced by press-and-hold buttons - ◀ ▶ steering bottom-left, GAS
+// and BRAKE pedals bottom-right. Pointer events cover touch and mouse;
+// each button captures its own pointer, so gas+steer can be held
+// together. Releasing a button returns that input to neutral.
+const driveBtn = {gas: 0, brake: 0, left: 0, right: 0};
+function bindHold(id, key) {
+  const el = document.getElementById(id);
+  const on = e => { e.preventDefault(); try { el.setPointerCapture(e.pointerId); } catch (err) {} driveBtn[key] = 1; el.classList.add('held'); };
+  const off = () => { driveBtn[key] = 0; el.classList.remove('held'); };
+  el.addEventListener('pointerdown', on);
+  el.addEventListener('pointerup', off);
+  el.addEventListener('pointercancel', off);
+  el.addEventListener('lostpointercapture', off);
+  el.addEventListener('contextmenu', e => e.preventDefault());
+}
+bindHold('btnGas', 'gas'); bindHold('btnBrake', 'brake');
+bindHold('btnLeft', 'left'); bindHold('btnRight', 'right');
+// ---- v11 Tilt Camera buttons: one tap = one TILT_STEP; holding
+// repeats after a short delay. Save Tilt stores the pitch on this
+// device (localStorage) so the next visit starts from his choice.
+function tiltStep(d) {
+  tiltTouched = true;
+  tiltDeg = Math.max(TILT_MIN, Math.min(TILT_MAX, tiltDeg + d));
+  updateTiltReadout();
+}
+function bindTilt(id, d) {
+  const el = document.getElementById(id);
+  let t1 = null, t2 = null;
+  const clear = () => { if (t1) { clearTimeout(t1); t1 = null; } if (t2) { clearInterval(t2); t2 = null; } el.classList.remove('held'); };
+  el.addEventListener('pointerdown', e => {
+    e.preventDefault(); try { el.setPointerCapture(e.pointerId); } catch (err) {}
+    el.classList.add('held'); tiltStep(d);
+    t1 = setTimeout(() => { t2 = setInterval(() => tiltStep(d), 55); }, 350);
+  });
+  el.addEventListener('pointerup', clear);
+  el.addEventListener('pointercancel', clear);
+  el.addEventListener('lostpointercapture', clear);
+  el.addEventListener('contextmenu', e => e.preventDefault());
+}
+bindTilt('btnTiltUp', TILT_STEP); bindTilt('btnTiltDown', -TILT_STEP);
+document.getElementById('btnSaveTilt').addEventListener('click', () => {
+  tiltTouched = true;
+  try { localStorage.setItem(TILT_KEY, String(tiltDeg)); savedTilt = tiltDeg; } catch (e) { /* storage unavailable */ }
+  updateTiltReadout();
+});
+updateTiltReadout();
 const keys = {};
 addEventListener('keydown', e => { const k = e.key.toLowerCase(); keys[k] = true;
   if (k === ' ') e.preventDefault();
@@ -434,24 +583,20 @@ function frame() {
   if (keys['d'] || keys['arrowright']) ix += 1;
   const mag = Math.hypot(ix, iy);
   if (mode === 'drive') {
-    // Driving - the game's scheme: W/up gas, S/down brake/reverse, A/D or
-    // arrows steer, Space handbrake. Joystick: push up = gas, down =
-    // brake/reverse, left/right = steer. The car rides surfaceAt() exactly
-    // like the character; camera and readouts follow the car.
+    // Driving (v11) - the game's scheme on keys (W/up gas, S/down
+    // brake/reverse, A/D or arrows steer) plus the press-and-hold
+    // on-screen buttons (driveBtn). The car rides surfaceAt() exactly like the character; camera and
+    // readouts follow the car.
     let throttle = 0, steer = 0;
-    if (keys['w'] || keys['arrowup']) throttle += 1;
-    if (keys['s'] || keys['arrowdown']) throttle -= 1;
-    if (keys['a'] || keys['arrowleft']) steer -= 1;
-    if (keys['d'] || keys['arrowright']) steer += 1;
-    throttle += -joyVec.y; steer += joyVec.x;
+    if (keys['w'] || keys['arrowup'] || driveBtn.gas) throttle += 1;
+    if (keys['s'] || keys['arrowdown'] || driveBtn.brake) throttle -= 1;
+    if (keys['a'] || keys['arrowleft'] || driveBtn.left) steer -= 1;
+    if (keys['d'] || keys['arrowright'] || driveBtn.right) steer += 1;
     throttle = Math.max(-1, Math.min(1, throttle)); steer = Math.max(-1, Math.min(1, steer));
     if (Math.abs(throttle) > 0.02 || Math.abs(steer) > 0.02) {
       if (ctl.autoRotate) { ctl.autoRotate = false; if (spinBtn) spinBtn.classList.remove('on'); }
     }
-    if (keys[' ']) {  // handbrake: strong stop, no throttle
-      const sgn = Math.sign(CAR.speed);
-      CAR.speed -= sgn * Math.min(Math.abs(CAR.speed), 14 * dt);
-    } else if (Math.abs(throttle) > 0.02) {
+    if (Math.abs(throttle) > 0.02) {
       CAR.speed += throttle * 7.5 * dt;
     } else {          // engine braking / rolling drag
       const sgn = Math.sign(CAR.speed);
