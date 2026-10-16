@@ -4,7 +4,9 @@
 <title>Buried street - walkable</title>
 <style>
   html,body,#app{height:100%;margin:0;background:#0f1420;font-family:system-ui;color:#e5e7eb}
-  #info{position:absolute;top:0;left:0;right:0;padding:10px 14px;background:rgba(10,14,24,.88);z-index:5}
+  #info{position:absolute;top:54px;left:0;right:0;padding:10px 14px;background:rgba(10,14,24,.92);z-index:5;display:none;max-height:45vh;overflow-y:auto}
+  #info.open{display:block}
+  #infoToggle{position:absolute;top:8px;left:8px;z-index:30;background:#facc15;color:#111827;border:2px solid #111827;border-radius:999px;padding:9px 15px;margin:0;font-size:18px;font-weight:700;line-height:1;cursor:pointer;box-shadow:0 2px 10px rgba(0,0,0,.5)}
   #info h3{margin:0 0 4px;font-size:16px}
   #info p{margin:2px 0;font-size:13px;line-height:1.45}
   .good{color:#86efac;font-weight:700}
@@ -12,16 +14,17 @@
   button{background:#1f2937;color:#e5e7eb;border:1px solid #4b5563;border-radius:999px;padding:8px 14px;margin:0 3px;font-size:13px}
   button.on{background:#2563eb;border-color:#2563eb}
 
-  #hud{position:absolute;top:132px;left:0;right:0;text-align:center;z-index:6;pointer-events:none}
+  #hud{position:static;text-align:center;pointer-events:none;padding-top:8px}
   #hud span{background:rgba(10,14,24,.85);padding:6px 14px;border-radius:999px;font-size:14px;font-weight:600}
   #joy{position:absolute;bottom:18px;left:16px;width:118px;height:118px;border-radius:50%;background:rgba(10,14,24,.55);border:2px solid rgba(255,255,255,.9);box-shadow:0 2px 14px rgba(0,0,0,.5);z-index:20;touch-action:none}
   #knob{position:absolute;left:50%;top:50%;width:52px;height:52px;border-radius:50%;background:#facc15;border:2px solid #111827;transform:translate(-50%,-50%)}
 </style></head><body>
 <div id="app"></div>
+<button id="infoToggle" aria-expanded="false" aria-controls="info" title="Show / hide info">🗒️ <span id="infoArrow">▾</span></button>
 <div id="info">
-  <h3>King James Drive Southwest — STREET VIEW — walkable v6</h3>
+  <h3>King James Drive Southwest — STREET VIEW — walkable v7</h3>
   <p>The dark ribbon is <b>King James Drive Southwest</b> at its true width — and in this test the road itself is fixed the way Joshua directed: it is cut into short segments every 2.5 m and every point's height is set from the ground, so the road <b>bends and rides on the terrain</b> instead of diving through the hill. Where it used to run <b>up to 15 m underground</b>, it now stays on the surface the whole way (the red marker stands at the old worst spot). The light-blue road is the same street seen through the hill (toggle: X-ray street) — it should hug the ground end to end. Every other street in view is unchanged — solid surface, true width, its own stored heights. The character stands next to the street. <b>Austin Road Southwest</b>, which tees into King James at this spot, gets the same fix in this test — its stored heights left about 200 m of it shallowly underground in stretches (worst about 1.5 m). <b>Walk him with the joystick (bottom left) or W A S D / arrow keys</b> — walk King James end to end and the readout should say <b>on the surface</b> the whole way. Drag still pans, two fingers orbit.</p>
-  
+  <div id="hud"><span id="hudText">On the surface</span></div>
 </div>
 <div id="btns">
   
@@ -30,7 +33,6 @@
   <button id="bXray" class="on">X-ray street</button>
   <button id="bFind">Find character</button>
 </div>
-<div id="hud"><span id="hudText">On the surface</span></div>
 <div id="joy"><div id="knob"></div></div>
 <script src="https://unpkg.com/three@0.128.0/build/three.min.js"></script>
 <script src="https://unpkg.com/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
@@ -283,4 +285,15 @@ function frame() {
   ctl.update(); ren.render(scene, cam);
 }
 frame();
+</script>
+<script>
+// v7: the info panel starts minimized; the notepad button drops it down (scrollable) and tucks it away.
+(function(){
+  var btn = document.getElementById('infoToggle'), panel = document.getElementById('info'), arrow = document.getElementById('infoArrow');
+  btn.addEventListener('click', function(){
+    var open = panel.classList.toggle('open');
+    arrow.textContent = open ? '▴' : '▾';
+    btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+})();
 </script></body></html>
